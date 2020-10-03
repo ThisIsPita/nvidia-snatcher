@@ -20,7 +20,7 @@ const inStock: Record<string, boolean> = {};
  * @param browser Puppeteer browser.
  * @param store Vendor of graphics cards.
  */
-async function lookup(browser: Browser, store: Store) {
+async function lookup(browser: Browser, store: Store, proxy = 0) {
 	/* eslint-disable no-await-in-loop */
 	for (const link of store.links) {
 		if (!filterStoreLink(link)) {
@@ -35,6 +35,12 @@ async function lookup(browser: Browser, store: Store) {
 		const page = await browser.newPage();
 		page.setDefaultNavigationTimeout(config.page.timeout);
 		await page.setUserAgent(config.page.userAgent);
+
+		//set proxy.
+		var proxyToUse = Config.proxy.list[proxy];
+		await page.setExtraHTTPHeaders({
+			'x-no-forward-upstream-proxy': proxyToUse
+		});
 
 		if (store.disableAdBlocker) {
 			try {
@@ -164,7 +170,7 @@ async function lookupCardInStock(store: Store, page: Page, link: Link) {
 	return true;
 }
 
-export async function tryLookupAndLoop(browser: Browser, store: Store) {
+export async function tryLookupAndLoop(browser: Browser, store: Store, proxy = 0) {
 	logger.debug(`[${store.name}] Starting lookup...`);
 	try {
 		await lookup(browser, store);
@@ -174,5 +180,13 @@ export async function tryLookupAndLoop(browser: Browser, store: Store) {
 
 	const sleepTime = getSleepTime();
 	logger.debug(`[${store.name}] Lookup done, next one in ${sleepTime} ms`);
+
+	var i = proxy;
+	if(proxy == 4){
+		i = 0;
+	} else {
+		i++;
+	}
+
 	setTimeout(tryLookupAndLoop, sleepTime, browser, store);
 }

@@ -105,6 +105,11 @@ const notifications = {
 		accessToken: envOrString(process.env.TELEGRAM_ACCESS_TOKEN),
 		chatId: envOrString(process.env.TELEGRAM_CHAT_ID)
 	},
+	telnyx: {
+		apiKey: envOrString(process.env.TELNYX_API_KEY),
+		from: envOrString(process.env.TELNYX_FROM_NUMBER),
+		to:envOrArray(process.env.TELNYX_TO_NUMBERS)
+	},
 	twilio: {
 		accountSid: envOrString(process.env.TWILIO_ACCOUNT_SID),
 		authToken: envOrString(process.env.TWILIO_AUTH_TOKEN),
@@ -136,7 +141,8 @@ const page = {
 
 const proxy = {
 	address: envOrString(process.env.PROXY_ADDRESS, ''),
-	port: envOrNumber(process.env.PROXY_PORT, 80)
+	port: envOrNumber(process.env.PROXY_PORT, 80),
+	list: envOrArray(process.env.PROXY_LIST)
 };
 
 const store = {
