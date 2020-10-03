@@ -37,7 +37,7 @@ async function lookup(browser: Browser, store: Store, proxy = 0) {
 		await page.setUserAgent(config.page.userAgent);
 
 		//set proxy.
-		var proxyToUse = Config.proxy.list[proxy];
+		var proxyToUse = config.proxy.list[proxy];
 		await page.setExtraHTTPHeaders({
 			'x-no-forward-upstream-proxy': proxyToUse
 		});
